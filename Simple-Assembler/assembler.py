@@ -1,4 +1,3 @@
-import random
 import sys
 
 REGISTERS = {
@@ -13,6 +12,7 @@ REGISTERS = {
 }
 lab = {}
 variables = {}
+imm=['mov','rs','ls']
 
 def binaryof(n):
     binary_number = ""
@@ -31,7 +31,18 @@ def sub(reg1, reg2, reg3):
     i = '00001' + '00' + REGISTERS[reg1] + REGISTERS[reg2] + REGISTERS[reg3]
     print(i)
 
+def addf(reg1,reg2,reg3):
+    i='10000'+'00'+REGISTERS[reg1]+ REGISTERS[reg2]+REGISTERS[reg3]
+    print(i)
+
+def subf(reg1,reg2,reg3):
+      i='10001'+'00'+REGISTERS[reg1]+ REGISTERS[reg2]+REGISTERS[reg3]
+      print(i)
+
 def mov(reg1, Imm):
+    if(int(Imm[1:])>127):
+        print("Immediate value should be less than 127.")
+        exit()
     i = '00010' + '0' + REGISTERS[reg1] + binaryof(int(Imm[1:]))
     print(i)
 
@@ -104,7 +115,6 @@ def hlt():
     print(i)
 
 def assign_label(file):
-        #file = sys.stdin.readlines()
         i = 0
         for l in file:
             l = l.split()
@@ -139,26 +149,10 @@ def assign_mem_var(file):
         else:
             break
         
-            
-            
-        
-                
-
-# def check_flag():
-#     i = 0
-#     file = sys.stdin.readlines()
-#     for l in file:
-#             i = i + 1 
-#             l = l.split()
-#             if 'FLAGS' in l:
-#                 print("Misuse of flags register in line ",i)
-
 def check_hlt(file,i):
     c = 0 
-    #file = sys.stdin.readlines()
     for l in file:
         c = c + 1
-    #l = sys.stdin.readlines()
     l = file
     if i < c:
         l1 = l[i-1].split()
@@ -172,38 +166,14 @@ def check_hlt(file,i):
             print("Error more hlt are there at last line.")
         else:
             hlt()
-imm=['mov','rs','ls']
-
-# def imm_chk():
-#     file = sys.stdin.readlines()
-#     i=0
-#     for e in file:
-#             i=i+1
-#             if e != None:
-#                 e = e.split()
-#                 if e[0] in imm:
-#                     if e[1] in key:
-#                         if e[2][0]!='$':
-#                             print("error is in line",i,"$ missing")
-#                         elif e[2][1:].isdigit()==False:
-#                             print("Error is in line",i,"immediate value is not valid")
-#                         elif e[2][1:].isdigit()==True:
-#                             if int(e[2][1:])>127 :
-#                                 print("Error is in line",i,"immediate value is exceeding memory")
-
-
 
 key = ['R1', 'R2', 'R0', 'R3', 'R4', 'R5', 'R6'] 
-
-
-
-#check_flag()
-#imm_chk()
 
 file = sys.stdin.readlines()
 assign_label(file)
 assign_mem_var(file)
 var_k = variables.keys()
+
 i = 0
 for e in file:
         i = i + 1
@@ -245,6 +215,21 @@ for e in file:
                         print("Other registers used, error in line",i) 
                 else:
                     print("syntax error in line",i) 
+            elif e[0]=='addf':
+                if len(e)==4:
+                    if e[1] and e[2] and e[3] in key:
+                        addf(e[1],e[2],e[3])
+                        continue
+                    else:
+                        print("undifined register used")
+
+            elif e[0]=='subf':
+                if len(e)==4:
+                    if e[1] and e[2] and e[3] in key:
+                        subf(e[1],e[2],e[3])
+                        continue
+                    else:
+                        print("undifined register used")
 
             elif e[0] == 'mov':
                 if len(e)==3:
@@ -402,3 +387,4 @@ else:
     
 
 
+ 
