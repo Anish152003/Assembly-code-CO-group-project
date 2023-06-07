@@ -207,7 +207,7 @@ def je(instruction_addr):
 def movi(r1, Imm):
     Imm = Imm.zfill(16)
     RF[r1] = Imm
-    printf()
+    printf()  
     
 def store(r1, instruction_addr):
     mem[instruction_addr] = RF[r1]
@@ -237,10 +237,10 @@ for j in range(124):
     mem[decimal_to_binary(j)] = '0000000000000000'
 
 # initializing binary instructions(reading from file)
-with open('input.txt', 'r') as file:
-    lines = file.readlines()
-    lines = [l.strip('\n') for l in lines]
-#lines = sys.stdin.readlines()
+#with open('input.txt', 'r') as file:
+#    lines = file.readlines()
+#    lines = [l.strip('\n') for l in lines]
+lines = sys.stdin.readlines()
 i = 0
 c = 0
 while i < len(lines):
