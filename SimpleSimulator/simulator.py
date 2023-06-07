@@ -19,6 +19,12 @@ RF = {'000':'0000000000000000',
 def printf():
     print(f"{PC}        {RF['000']} {RF['001']} {RF['010']} {RF['011']} {RF['100']} {RF['101']} {RF['110']} {RF['111']}")
     
+def binary_to_decimal(binary):
+    decimal = 0
+    for bit in binary:
+        decimal = decimal * 2 + int(bit)
+    return decimal
+
 def decimal_to_binary(decimal):
     binary = bin(decimal)[2:]  # Convert decimal to binary string, excluding the '0b' prefix
     padding = 7 - len(binary)  # Calculate the number of leading zeros needed
@@ -54,9 +60,9 @@ def complement(binary):
     complemented = ''.join('1' if bit == '0' else '0' for bit in binary)
     return complemented
 
-def dec_bin(decimal):           # returns 16 bit binary
-    binary = bin(decimal)[2:]  # Convert decimal to binary string
-    binary = binary.zfill(16)  # Pad the binary string with leading zeros if necessary
+def dec_bin(decimal):          
+    binary = bin(decimal)[2:]  
+    binary = binary.zfill(16)  
     return binary
 #                                       =================-------------main functions-------------==============
 
@@ -180,7 +186,6 @@ def cmp(r1,r2):
     printf()
     
 def jmp(instruction_addr):
-    PC=instruction_addr
     printf()
 
 def jlt(instruction_addr):
@@ -250,9 +255,10 @@ while i < len(lines):
 
 print(len(instruction))
 
-pc1 = instruction.keys()
+pc1 = list(instruction.keys())
 i = 0
-for PC in pc1:
+while i < len(pc1):
+    PC = pc1[i]
     if instruction[PC][:5] == '00000':
         add(instruction[PC][7:10],instruction[PC][10:13],instruction[PC][13:])
     elif instruction[PC][:5] == '00001':
@@ -284,16 +290,32 @@ for PC in pc1:
     elif instruction[PC][:5] == '01110':
         cmp(instruction[PC][10:13],instruction[PC][13:]) 
     elif instruction[PC][:5] == '01111':
-        jmp(instruction[PC][9:])
+        i = binary_to_decimal(instruction[PC][9:])
+        PC = pc1[i]
+        i = i - 1
+        printf()
     elif instruction[PC][:5] == '11100':
-        jlt(instruction[PC][9:])
+        if RF['111']=='0000000000000100':
+            i = binary_to_decimal(instruction[PC][9:])
+            PC = pc1[i]
+            i = i - 1
+        printf()
     elif instruction[PC][:5] == '11101':
-        jgt(instruction[PC][9:])
+        if RF['111']=='0000000000000010':
+            i = binary_to_decimal(instruction[PC][9:])
+            PC = pc1[i]
+            i = i - 1
+        printf()
     elif instruction[PC][:5] == '11111':
-        je(instruction[PC][9:])
+        if RF['111']=='0000000000000001':
+            i = binary_to_decimal(instruction[PC][9:])
+            PC = pc1[i]
+            i = i - 1
+        printf()
     elif instruction[PC][:5] == '11010':
         printf()
         break
+    i = i + 1
 
 for i in mem.values():
     print(i)
